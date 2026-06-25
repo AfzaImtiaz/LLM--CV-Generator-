@@ -10,13 +10,13 @@ Built as part of an LLM Bootcamp project — designed to be simple to run, easy 
 
 ## Features
 
-- 💬 **Conversational memory** — keeps track of the chat history with a sliding token-window so old messages get trimmed automatically once a limit is hit.
-- 🎭 **Custom personas** — launch the bot as a specific kind of assistant (e.g. a Python tutor, a writing coach) using a single flag.
-- 🎨 **Color-coded chat** — your messages and the bot's replies are color-coded in the terminal for easy reading.
-- 🧹 **`/clear` command** — wipe the conversation and start fresh without restarting the program.
-- 💾 **Save & load conversations** — export your chat history to a JSON file and reload it later.
-- 💰 **Live cost tracking** — see token usage and estimated cost after every message.
-- 🔁 **Automatic retries** — if Gemini's servers are temporarily overloaded (503) or rate-limited (429), the bot automatically retries with backoff instead of crashing.
+-  **Conversational memory** — keeps track of the chat history with a sliding token-window so old messages get trimmed automatically once a limit is hit.
+-  **Custom personas** — launch the bot as a specific kind of assistant (e.g. a Python tutor, a writing coach) using a single flag.
+-  **Color-coded chat** — your messages and the bot's replies are color-coded in the terminal for easy reading.
+-  **`/clear` command** — wipe the conversation and start fresh without restarting the program.
+-  **Save & load conversations** — export your chat history to a JSON file and reload it later.
+-  **Live cost tracking** — see token usage and estimated cost after every message.
+-  **Automatic retries** — if Gemini's servers are temporarily overloaded (503) or rate-limited (429), the bot automatically retries with backoff instead of crashing.
 
 ---
 
