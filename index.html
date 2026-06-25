@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LetterForge — Cover Letters That Land</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080B12; --surface: #0E1220; --surface2: #131828;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.04);
+    --accent: #6C63FF; --accent2: #A78BFA; --glow: rgba(108,99,255,0.35);
+    --text: #F0F2FF; --muted: #7B82A0; --success: #34D399;
+    --font-display: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; }
+  .orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; opacity:0.4; }
+  .orb-1 { width:600px; height:600px; background:var(--accent); top:-200px; right:-100px; }
+  .orb-2 { width:400px; height:400px; background:#1A1060; bottom:100px; left:-150px; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:20px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:rgba(8,11,18,0.7); backdrop-filter:blur(20px); }
+  .nav-logo { font-family:var(--font-display); font-weight:800; font-size:1.25rem; letter-spacing:-0.02em; }
+  .nav-logo span { color:var(--accent2); }
+  .nav-right { display:flex; align-items:center; gap:12px; }
+  .nav-pill { background:rgba(108,99,255,0.15); border:1px solid rgba(108,99,255,0.3); color:var(--accent2); font-size:0.75rem; font-weight:500; padding:4px 12px; border-radius:999px; letter-spacing:0.05em; text-transform:uppercase; }
+  .history-nav-btn { background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--muted); font-family:var(--font-body); font-size:0.78rem; padding:6px 14px; border-radius:999px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
+  .history-nav-btn:hover { color:var(--text); border-color:rgba(255,255,255,0.15); }
+  .history-badge { background:var(--accent); color:#fff; font-size:0.65rem; font-weight:700; padding:1px 6px; border-radius:999px; display:none; }
+  .history-badge.visible { display:inline-block; }
+  .page { display:none; }
+  .page.active { display:flex; flex-direction:column; align-items:center; }
+  .hero { position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:120px 24px 80px; text-align:center; width:100%; }
+  .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(108,99,255,0.1); border:1px solid rgba(108,99,255,0.25); border-radius:999px; padding:6px 16px; font-size:0.8rem; color:var(--accent2); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:28px; font-weight:500; }
+  .hero-eyebrow::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--success); box-shadow:0 0 8px var(--success); animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .hero h1 { font-family:var(--font-display); font-size:clamp(2.8rem,7vw,5.5rem); font-weight:800; line-height:1.05; letter-spacing:-0.03em; max-width:820px; margin-bottom:24px; }
+  .hero h1 .highlight { background:linear-gradient(135deg,#A78BFA,#6C63FF,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero-sub { font-size:1.1rem; color:var(--muted); max-width:480px; margin-bottom:48px; font-weight:300; line-height:1.7; }
+  .card { position:relative; z-index:1; width:100%; max-width:720px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:40px; box-shadow:0 0 80px rgba(108,99,255,0.08),0 24px 64px rgba(0,0,0,0.4); }
+  .card::before { content:''; position:absolute; inset:0; border-radius:20px; padding:1px; background:linear-gradient(135deg,rgba(108,99,255,0.4),transparent 60%); -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+  .form-group { display:flex; flex-direction:column; gap:6px; }
+  .form-group.full { grid-column:1/-1; }
+  label { font-size:0.72rem; font-weight:500; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; }
+  input, textarea, select { background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:var(--font-body); font-size:0.9rem; padding:12px 16px; transition:border-color 0.2s,box-shadow 0.2s; outline:none; width:100%; }
+  input::placeholder, textarea::placeholder { color:#3A4060; }
+  input:focus, textarea:focus, select:focus { border-color:rgba(108,99,255,0.5); box-shadow:0 0 0 3px rgba(108,99,255,0.1); }
+  textarea { resize:vertical; min-height:90px; }
+  select option { background:#0E1220; }
+  .tone-lang-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .tone-group { display:flex; gap:8px; }
+  .tone-btn { flex:1; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-family:var(--font-body); font-size:0.8rem; padding:10px; cursor:pointer; transition:all 0.2s; text-align:center; }
+  .tone-btn:hover { border-color:rgba(108,99,255,0.4); color:var(--text); }
+  .tone-btn.active { background:rgba(108,99,255,0.15); border-color:rgba(108,99,255,0.5); color:var(--accent2); }
+  .templates-btn { width:100%; margin-bottom:16px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:12px; color:var(--muted); font-family:var(--font-body); font-size:0.85rem; padding:12px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .templates-btn:hover { border-color:rgba(108,99,255,0.4); color:var(--text); }
+  .templates-dropdown { display:none; margin-bottom:16px; }
+  .templates-dropdown.open { display:block; }
+  .template-card { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; }
+  .template-card:hover { border-color:rgba(108,99,255,0.4); background:rgba(108,99,255,0.05); }
+  .template-card-name { font-size:0.85rem; font-weight:500; color:var(--text); }
+  .template-card-meta { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+  .template-card-arrow { color:var(--accent2); font-size:0.85rem; }
+  .btn-generate { width:100%; margin-top:20px; background:linear-gradient(135deg,#6C63FF,#A78BFA); border:none; border-radius:12px; color:#fff; font-family:var(--font-display); font-size:1rem; font-weight:700; padding:16px; cursor:pointer; letter-spacing:0.02em; position:relative; overflow:hidden; transition:opacity 0.2s,transform 0.15s; }
+  .btn-generate:hover { opacity:0.9; transform:translateY(-1px); }
+  .btn-generate:active { transform:translateY(0); }
+  .btn-generate:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+  .btn-generate .spinner { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto; }
+  .btn-generate.loading .btn-text { display:none; }
+  .btn-generate.loading .spinner { display:block; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .output-section { position:relative; z-index:1; width:100%; max-width:720px; margin-top:24px; display:none; }
+  .output-section.visible { display:block; }
+  .output-card { background:var(--surface); border:1px solid var(--border); border-radius:20px; overflow:hidden; box-shadow:0 0 60px rgba(108,99,255,0.06); }
+  .output-header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:1px solid var(--border); background:rgba(108,99,255,0.05); }
+  .output-header-left { display:flex; align-items:center; gap:10px; font-size:0.8rem; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
+  .output-dot { width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 8px var(--success); }
+  .output-dot.streaming { animation:pulse 0.8s infinite; }
+  .output-actions { display:flex; gap:8px; }
+  .copy-btn, .save-btn { background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:7px; color:var(--muted); font-size:0.75rem; padding:6px 14px; cursor:pointer; transition:all 0.2s; font-family:var(--font-body); }
+  .copy-btn:hover, .save-btn:hover { color:var(--text); border-color:rgba(255,255,255,0.15); }
+  .save-btn { color:var(--accent2); border-color:rgba(108,99,255,0.3); }
+  .save-btn:hover { background:rgba(108,99,255,0.1); }
+  .output-body { padding:28px 32px; font-size:0.92rem; line-height:1.85; color:#C8CCDE; white-space:pre-wrap; min-height:80px; }
+  .cursor { display:inline-block; width:2px; height:1em; background:var(--accent2); vertical-align:text-bottom; animation:blink 1s step-end infinite; margin-left:1px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .error-box { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:10px; color:#FCA5A5; font-size:0.85rem; padding:14px 18px; margin-top:16px; display:none; }
+  .error-box.visible { display:block; }
+  .history-page { position:relative; z-index:1; min-height:100vh; width:100%; padding:120px 24px 80px; }
+  .history-header { max-width:800px; margin:0 auto 32px; display:flex; align-items:center; justify-content:space-between; }
+  .history-title { font-family:var(--font-display); font-size:1.8rem; font-weight:800; letter-spacing:-0.02em; }
+  .history-title span { color:var(--accent2); }
+  .clear-btn { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:8px; color:#FCA5A5; font-size:0.78rem; padding:8px 16px; cursor:pointer; font-family:var(--font-body); transition:all 0.2s; }
+  .clear-btn:hover { background:rgba(239,68,68,0.15); }
+  .history-empty { max-width:800px; margin:80px auto; text-align:center; color:var(--muted); }
+  .history-empty-icon { font-size:3rem; margin-bottom:16px; opacity:0.3; }
+  .history-empty p { font-size:0.95rem; }
+  .history-list { max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
+  .history-item { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:border-color 0.2s; }
+  .history-item:hover { border-color:rgba(108,99,255,0.25); }
+  .history-item-header { padding:18px 24px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+  .history-item-meta { display:flex; flex-direction:column; gap:4px; }
+  .history-item-title { font-family:var(--font-display); font-size:1rem; font-weight:700; }
+  .history-item-tags { display:flex; gap:8px; }
+  .tag { font-size:0.7rem; padding:3px 10px; border-radius:999px; font-weight:500; letter-spacing:0.04em; text-transform:uppercase; }
+  .tag-tone { background:rgba(108,99,255,0.15); color:var(--accent2); border:1px solid rgba(108,99,255,0.25); }
+  .tag-lang { background:rgba(52,211,153,0.1); color:var(--success); border:1px solid rgba(52,211,153,0.2); }
+  .tag-time { background:rgba(255,255,255,0.04); color:var(--muted); border:1px solid var(--border); }
+  .history-item-chevron { color:var(--muted); font-size:1.1rem; transition:transform 0.25s; }
+  .history-item.open .history-item-chevron { transform:rotate(180deg); }
+  .history-item-body { display:none; padding:0 24px 24px; }
+  .history-item.open .history-item-body { display:block; }
+  .history-letter { background:rgba(255,255,255,0.02); border:1px solid var(--border2); border-radius:10px; padding:20px 24px; font-size:0.88rem; line-height:1.85; color:#C8CCDE; white-space:pre-wrap; margin-bottom:12px; }
+  .history-copy-btn { background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:7px; color:var(--muted); font-size:0.75rem; padding:6px 14px; cursor:pointer; transition:all 0.2s; font-family:var(--font-body); }
+  .history-copy-btn:hover { color:var(--text); }
+  footer { position:relative; z-index:1; text-align:center; padding:40px 24px; color:#2E3450; font-size:0.78rem; letter-spacing:0.05em; }
+  @media (max-width:600px) {
+    nav { padding:16px 20px; }
+    .card { padding:24px 20px; }
+    .form-grid { grid-template-columns:1fr; }
+    .tone-lang-row { grid-template-columns:1fr; }
+    .hero h1 { font-size:2.4rem; }
+    .output-body { padding:20px; }
+    .history-page { padding:100px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <div class="nav-logo">Letter<span>Forge</span></div>
+  <div class="nav-right">
+    <button class="history-nav-btn" id="historyNavBtn">
+      &#128196; History <span class="history-badge" id="historyBadge">0</span>
+    </button>
+    <div class="nav-pill">Powered by Gemini</div>
+  </div>
+</nav>
+
+<div class="page active" id="generatePage">
+  <main class="hero">
+    <div class="hero-eyebrow">AI Cover Letter Generator</div>
+    <h1>Write cover letters that<br><span class="highlight">actually get replies.</span></h1>
+    <p class="hero-sub">Paste a job description, describe yourself, pick a tone. Get a sharp, specific letter in seconds — not a template.</p>
+
+    <div class="card">
+      <button class="templates-btn" id="templatesBtn">&#9881; Load an example template</button>
+      <div class="templates-dropdown" id="templatesDropdown"></div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Job Title</label>
+          <input type="text" id="job_title" placeholder="e.g. Python Developer" />
+        </div>
+        <div class="form-group">
+          <label>Company</label>
+          <input type="text" id="company_name" placeholder="e.g. Systems Ltd" />
+        </div>
+        <div class="form-group full">
+          <label>Job Description</label>
+          <textarea id="job_description" placeholder="Paste the job description here..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Your Background</label>
+          <textarea id="candidate_background" placeholder="Your experience, skills, projects..."></textarea>
+        </div>
+        <div class="form-group full">
+          <div class="tone-lang-row">
+            <div class="form-group">
+              <label>Tone</label>
+              <div class="tone-group">
+                <button class="tone-btn active" data-tone="confident">Confident</button>
+                <button class="tone-btn" data-tone="formal">Formal</button>
+                <button class="tone-btn" data-tone="conversational">Casual</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Language</label>
+              <select id="languageInput">
+                <option value="English" selected>English</option>
+                <option value="Urdu">Urdu (اردو)</option>
+                <option value="Arabic">Arabic (العربية)</option>
+                <option value="French">French</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+                <option value="Turkish">Turkish</option>
+                <option value="Chinese">Chinese (Simplified)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-generate" id="generateBtn">
+        <span class="btn-text">Generate Cover Letter</span>
+        <div class="spinner"></div>
+      </button>
+      <div class="error-box" id="errorBox"></div>
+    </div>
+
+    <div class="output-section" id="outputSection">
+      <div class="output-card">
+        <div class="output-header">
+          <div class="output-header-left">
+            <div class="output-dot" id="outputDot"></div>
+            <span id="outputLabel">Generating...</span>
+          </div>
+          <div class="output-actions">
+            <button class="save-btn" id="saveBtn" style="display:none">Save to History</button>
+            <button class="copy-btn" id="copyBtn">Copy</button>
+          </div>
+        </div>
+        <div class="output-body" id="outputBody"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="page" id="historyPage">
+  <div class="history-page">
+    <div class="history-header">
+      <div class="history-title">Letter <span>History</span></div>
+      <button class="clear-btn" id="clearHistoryBtn">Clear all</button>
+    </div>
+    <div class="history-empty" id="historyEmpty">
+      <div class="history-empty-icon">📄</div>
+      <p>No letters saved yet. Generate one and click "Save to History".</p>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+</div>
+
+<footer>LetterForge — built on FastAPI + Gemini</footer>
+
+<script>
+  let selectedTone = 'confident';
+  let history = [];
+  let lastGenerated = null;
+
+  const generatePage = document.getElementById('generatePage');
+  const historyPage = document.getElementById('historyPage');
+  const historyNavBtn = document.getElementById('historyNavBtn');
+
+  historyNavBtn.addEventListener('click', () => {
+    const onHistory = historyPage.classList.contains('active');
+    if (onHistory) {
+      historyPage.classList.remove('active');
+      generatePage.classList.add('active');
+      historyNavBtn.innerHTML = '&#128196; History <span class="history-badge ' + (history.length ? 'visible' : '') + '" id="historyBadge">' + history.length + '</span>';
+    } else {
+      generatePage.classList.remove('active');
+      historyPage.classList.add('active');
+      historyNavBtn.innerHTML = '&#8592; Back <span class="history-badge" id="historyBadge"></span>';
+      renderHistory();
+    }
+  });
+
+  document.querySelectorAll('.tone-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedTone = btn.dataset.tone;
+    });
+  });
+
+  const generateBtn = document.getElementById('generateBtn');
+  const outputSection = document.getElementById('outputSection');
+  const outputBody = document.getElementById('outputBody');
+  const outputDot = document.getElementById('outputDot');
+  const outputLabel = document.getElementById('outputLabel');
+  const errorBox = document.getElementById('errorBox');
+  const copyBtn = document.getElementById('copyBtn');
+  const saveBtn = document.getElementById('saveBtn');
+
+  generateBtn.addEventListener('click', async () => {
+    const job_title = document.getElementById('job_title').value.trim();
+    const company_name = document.getElementById('company_name').value.trim();
+    const job_description = document.getElementById('job_description').value.trim();
+    const candidate_background = document.getElementById('candidate_background').value.trim();
+    const language = document.getElementById('languageInput').value;
+
+    if (!job_title || !company_name || !job_description || !candidate_background) {
+      showError('Please fill in all fields before generating.');
+      return;
+    }
+
+    errorBox.classList.remove('visible');
+    saveBtn.style.display = 'none';
+    generateBtn.classList.add('loading');
+    generateBtn.disabled = true;
+    outputBody.textContent = '';
+    outputSection.classList.add('visible');
+    outputDot.classList.add('streaming');
+    outputLabel.textContent = 'Generating...';
+
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    outputBody.appendChild(cursor);
+
+    let fullText = '';
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job_title, company_name, job_description, candidate_background, tone: selectedTone, language })
+      });
+
+      if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        fullText += decoder.decode(value, { stream: true });
+        outputBody.textContent = fullText;
+        outputBody.appendChild(cursor);
+        outputBody.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }
+
+      cursor.remove();
+      outputDot.classList.remove('streaming');
+      outputLabel.textContent = 'Cover letter ready';
+      saveBtn.style.display = 'inline-block';
+
+      lastGenerated = { job_title, company_name, tone: selectedTone, language, letter: fullText, time: new Date() };
+
+    } catch (err) {
+      cursor.remove();
+      outputSection.classList.remove('visible');
+      showError('Could not reach the server. Make sure it\'s running on port 8000.');
+    } finally {
+      generateBtn.classList.remove('loading');
+      generateBtn.disabled = false;
+    }
+  });
+
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(outputBody.textContent).then(() => {
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+    });
+  });
+
+  saveBtn.addEventListener('click', () => {
+    if (!lastGenerated) return;
+    history.unshift(lastGenerated);
+    updateBadge();
+    saveBtn.textContent = 'Saved!';
+    saveBtn.style.opacity = '0.5';
+    saveBtn.disabled = true;
+    setTimeout(() => {
+      saveBtn.textContent = 'Save to History';
+      saveBtn.style.opacity = '';
+      saveBtn.disabled = false;
+    }, 2000);
+  });
+
+  // ── TEMPLATES ──
+  const templatesBtn = document.getElementById('templatesBtn');
+  const templatesDropdown = document.getElementById('templatesDropdown');
+  let templatesCache = null;
+
+  templatesBtn.addEventListener('click', async () => {
+    const isOpen = templatesDropdown.classList.contains('open');
+    if (isOpen) { templatesDropdown.classList.remove('open'); return; }
+
+    if (!templatesCache) {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/templates');
+        templatesCache = await res.json();
+        templatesDropdown.innerHTML = templatesCache.map((t, i) => `
+          <div class="template-card" data-index="${i}">
+            <div>
+              <div class="template-card-name">${t.name}</div>
+              <div class="template-card-meta">${t.job_title} at ${t.company_name} &middot; ${t.tone}</div>
+            </div>
+            <span class="template-card-arrow">Fill form &#8594;</span>
+          </div>
+        `).join('');
+
+        templatesDropdown.querySelectorAll('.template-card').forEach((card, i) => {
+          card.addEventListener('click', () => {
+            const t = templatesCache[i];
+            document.getElementById('job_title').value = t.job_title;
+            document.getElementById('company_name').value = t.company_name;
+            document.getElementById('job_description').value = t.job_description;
+            document.getElementById('candidate_background').value = t.candidate_background;
+            document.getElementById('languageInput').value = t.language;
+            document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-tone="${t.tone}"]`).classList.add('active');
+            selectedTone = t.tone;
+            templatesDropdown.classList.remove('open');
+            templatesBtn.textContent = `✓ Template loaded: ${t.name}`;
+          });
+        });
+      } catch (e) {
+        templatesDropdown.innerHTML = '<div style="color:#FCA5A5;font-size:0.8rem;padding:8px">Could not load templates. Is the server running?</div>';
+      }
+    }
+    templatesDropdown.classList.add('open');
+  });
+
+  function renderHistory() {
+    const list = document.getElementById('historyList');
+    const empty = document.getElementById('historyEmpty');
+    list.innerHTML = '';
+    if (history.length === 0) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    history.forEach((entry, i) => {
+      const timeStr = entry.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const dateStr = entry.time.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.innerHTML = `
+        <div class="history-item-header">
+          <div class="history-item-meta">
+            <div class="history-item-title">${entry.job_title} <span style="color:var(--muted);font-weight:400">at</span> ${entry.company_name}</div>
+            <div class="history-item-tags">
+              <span class="tag tag-tone">${entry.tone}</span>
+              <span class="tag tag-lang">${entry.language}</span>
+              <span class="tag tag-time">${dateStr} ${timeStr}</span>
+            </div>
+          </div>
+          <div class="history-item-chevron">&#8964;</div>
+        </div>
+        <div class="history-item-body">
+          <div class="history-letter">${entry.letter}</div>
+          <button class="history-copy-btn" data-index="${i}">Copy letter</button>
+        </div>`;
+      item.querySelector('.history-item-header').addEventListener('click', () => item.classList.toggle('open'));
+      item.querySelector('.history-copy-btn').addEventListener('click', (e) => {
+        const idx = e.target.dataset.index;
+        navigator.clipboard.writeText(history[idx].letter).then(() => {
+          e.target.textContent = 'Copied!';
+          setTimeout(() => e.target.textContent = 'Copy letter', 2000);
+        });
+      });
+      list.appendChild(item);
+    });
+  }
+
+  document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+    if (history.length === 0) return;
+    if (confirm('Clear all saved letters?')) { history = []; updateBadge(); renderHistory(); }
+  });
+
+  function updateBadge() {
+    const badge = document.getElementById('historyBadge');
+    if (badge) { badge.textContent = history.length; badge.classList.toggle('visible', history.length > 0); }
+  }
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.classList.add('visible');
+  }
+</script>
+</body>
+</html>
